@@ -61,3 +61,22 @@ def current_album_client(app):
     request = client.post(url)
     assert request.status_code == 200
     yield from client_manager
+
+
+@pytest.fixture
+def discogs_vitals_client(app):
+    yield from setup_discogs_vitals_client(app, 'testuser', 'password')
+
+
+@pytest.fixture
+def discogs_vitals_client_emptyuser(app):
+    yield from setup_discogs_vitals_client(app, 'emptyuser', 'empty')
+
+
+def setup_discogs_vitals_client(app, username, password):
+    client_manager = user_client(username, password, app, setup=True)
+    client = next(client_manager)
+    url = flask.url_for('discogs.discogs_mock_setup')
+    request = client.get(url)
+    assert request.status_code == 204
+    yield from client_manager
