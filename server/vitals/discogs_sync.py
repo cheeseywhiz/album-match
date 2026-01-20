@@ -311,7 +311,7 @@ def plan_to_download_album_cover(collection, catalog):
     cover_image_url = item.release.data['cover_image']
     url = urllib.parse.urlparse(cover_image_url)
     _, ext = os.path.splitext(url.path)
-    static_path = f'album_cover/{catalog}{ext}'
+    static_path = f'album_cover/{TODO.url.encode(catalog)}{ext}'
     album_cover_file_location = utils.static_files() / static_path
     album_cover_url = f'/static/{static_path}'
     # TODO: do not call the lambda with None

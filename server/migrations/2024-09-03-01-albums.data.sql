@@ -1,3 +1,4 @@
+-- TODO: add offending album to test data. the one that starts with #
 INSERT INTO albums(catalog, title, artist, num_discs, discogs_release_id, album_cover_url) VALUES
 ('06・5P-74', 'アイ・フォート・ザ・ロウ = I Fought The Law c/w ハマースミス宮殿の白人 = White Man In Hammersmith Palais', 'The Clash = The Clash', 1, '3488479', '/static/album_cover/06・5P-74.jpg'),
 ('CAD 3420', 'Heaven Or Las Vegas', 'Cocteau Twins', 1, '23123066', '/static/album_cover/CAD 3420.jpg'),

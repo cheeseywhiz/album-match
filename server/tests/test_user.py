@@ -1,6 +1,9 @@
 import flask
 
 
+CRAZY_ALBUM_CATALOG = '?&#'
+
+
 class TestMe:
     def get_me(client):
         url = flask.url_for('user.user_me')
@@ -302,6 +305,12 @@ class TestUserAlbum:
         assert response.status_code == 200
         assert response.json is not None
 
+    def test_UserAlbum_SetCrazyAlbum_Valid(self, testuser_client, fresh_db):
+        """setting the current album to an album with a crazy catalog string should succeed"""
+        response = TestUserAlbum.post_album(catalog=CRAZY_ALBUM_CATALOG, side=1, client=testuser_client)
+        assert response.status_code == 200
+        assert response.json is not None
+
     # GET /user/album
 
     def test_UserAlbum_NotLoggedIn_GetAlbum_Unauthorized(self, client):
@@ -354,6 +363,20 @@ class TestUserAlbum:
         del flask.g._login_user
         response = TestUserAlbum.get_album(testuser_client).json
         assert response['side'] == 1
+
+    def test_UserAlbum_SetCrazyAlbum_GetAlbum_IsCorrectAlbum(self, testuser_client, fresh_db):
+        """when the current album's catalog is a crazy string, it should still show as the current album."""
+        response = TestUserAlbum.post_album(catalog=CRAZY_ALBUM_CATALOG, side=1, client=testuser_client)
+        assert response.status_code == 200  # smoke test
+        response = TestUserAlbum.get_album(testuser_client)
+        assert response['album']['catalog'] == CRAZY_ALBUM_CATALOG
+
+    def test_UserAlbum_CrazyAlbum_AlbumCoverUrl_IsEscaped(self, testuser_client, fresh_db):
+        """when the current album's catalog is a crazy string, it should have a url-encoded album cover image."""
+        response = TestUserAlbum.post_album(catalog=CRAZY_ALBUM_CATALOG, side=1, client=testuser_client)
+        assert response.status_code == 200  # smoke test
+        response = TestUserAlbum.get_album(testuser_client)
+        assert response['album']['album_cover_url'].endswith('%20%38%35.jpg')
 
     # DELETE /user/album
 
